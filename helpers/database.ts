@@ -20,7 +20,7 @@ export function initializeDatabase(): boolean {
   }
 }
 
-export function getRoomByName(name: string): { id: string, name: string, password: string, queue: string } | null {
+export function getRoomByName(name: string): { id: string, name: string, password: string, queue: string, preferences: string } | null {
   const stmt = db.prepare("SELECT * FROM rooms WHERE name = ?");
   const room = stmt.get(name);
   return room || null;

@@ -2,7 +2,6 @@ const socket = createSocketConnection();
 const roomName = getRoomName();
 
 let videoQueue;
-let isPaused = false;
 fetchQueue(roomName).then((queue) => {
   videoQueue = queue;
 });
@@ -26,16 +25,13 @@ function onYouTubeIframeAPIReady() {
 
 function onPlayerReady(event) {
   socket.on(`videoSecondsUpdated`, (seconds) => {
-    ytPlayer.playVideo();
     ytPlayer.seekTo(seconds, true);
   })
   socket.on("pauseVideo", () => {
     ytPlayer.pauseVideo();
-    isPaused = true;
   });
   socket.on("playVideo", () => {
     ytPlayer.playVideo();
-    isPaused = false;
   });
   socket.on(`queueUpdated`, async (queue) => {
     let isCurrentVideoSkip = videoQueue[0]?.videoId !== queue[0]?.videoId;

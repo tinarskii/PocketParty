@@ -1,5 +1,5 @@
-<main>
-    <h1>Error: {{ statusCode }}</h1>
-    <p>{{ message }}</p>
-    <a href="/">Back to homepage</a>
+<main class="min-h-screen flex flex-col justify-center items-center gap-4">
+    <h1 class="text-6xl font-bold text-error">Error: {{ statusCode }}</h1>
+    <p class="text-lg text-center">{{ message }}</p>
+    <a href="/" class="btn btn-accent">Back to homepage</a>
 </main>

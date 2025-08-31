@@ -9,7 +9,6 @@ fetchQueue(roomName).then((queue) => {
 });
 
 let ytPlayer;
-let isPaused = false;
 
 function onYouTubeIframeAPIReady() {
   ytPlayer = new YT.Player("player", {
@@ -26,7 +25,6 @@ function onYouTubeIframeAPIReady() {
 };
 
 function onPlayerReady(event) {
-  let ls = 0
   setInterval(() => {
     if (ytPlayer !== undefined && ytPlayer.getPlayerState() === YT.PlayerState.PLAYING) {
       let playSeconds = ytPlayer.getCurrentTime();
@@ -43,13 +41,9 @@ function onPlayerStateChange(event) {
       break;
     case YT.PlayerState.PAUSED:
       socket.emit("videoPaused", roomName);
-      isPaused = true;
       break;
     case YT.PlayerState.PLAYING:
-      if (isPaused) {
-        socket.emit("videoPlayed", roomName);
-      }
-      isPaused = false;
+      socket.emit("videoPlayed", roomName);
       break;
   }
 }

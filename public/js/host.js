@@ -66,3 +66,40 @@ updateQueueDisplay(roomName, videoQueue).then(null);
 window.onbeforeunload = (ev) => {
   socket.emit("hostDisconnect", roomName);
 }
+
+document.getElementById("addVideo").addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const videoURL = document.getElementById('videoURL').value;
+  const videoID = videoURL.split('v=')[1]?.split('&')[0];
+  if (!videoID) {
+    alert('Invalid YouTube URL');
+    return;
+  }
+  const roomName = window.location.pathname.split('/').pop();
+
+  try {
+    const response = await fetch(`/api/addVideoToQueue/${encodeURIComponent(roomName)}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({videoID}),
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const result = await response.json();
+    if (result.success) {
+      alert('Video added to the queue!');
+      document.getElementById('videoURL').value = '';
+      await updateQueueDisplay(roomName);
+    } else {
+      alert('Failed to add video: ' + result.message);
+    }
+  } catch (error) {
+    console.error('Error adding video:', error);
+    alert('An error occurred while adding the video.');
+  }
+});
